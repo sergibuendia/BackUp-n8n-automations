@@ -1,0 +1,388 @@
+{
+  "name": "RAG en Google Drive",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        0
+      ],
+      "id": "568c1008-79c7-4e9f-865b-e3ccb1737167",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        208
+      ],
+      "id": "4d6564ef-4835-431b-88eb-d8c417eed414",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        240,
+        448
+      ],
+      "id": "c0bcf466-88af-46b8-b44c-1dfab30efcc3",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        224
+      ],
+      "id": "4d042778-d7c3-4714-93b4-214e0c1124b6",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "LFnduX1SkoDgy4eT",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        704,
+        0
+      ],
+      "id": "fee9d778-71c8-4ab9-bcb5-f97d257520a1",
+      "name": "When chat message received",
+      "webhookId": "67cff452-907c-45e6-bda0-8b924afb49fa"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Eres el “Bot de la Kings League”, un experto conciso en el reglamento oficial de la Kings y Queens League.\n\nFUENTE DE CONOCIMIENTO: \n• Solo debes responder utilizando el contenido del documento:\n– “Reglamento Kings y Queens League.pdf”\n\nREGLAS DE COMPORTAMIENTO\n\n1. Responde únicamente con información contenida en el reglamento. Si no encuentras la respuesta en el PDF, di: “No veo eso en el reglamento oficial de la Kings League.”\n2. Sé preciso y directo: responde en 3 o 4 párrafos como máximo o usa listas con viñetas si es más claro.\n3. Para normas, sanciones, formatos, tiempos, definiciones, cartas, etc., cita literalmente el texto del reglamento cuando sea posible.\n4. Después de cada información clave, añade una referencia en este formato: (Reglamento p. #)\n5. No reveles ningún dato técnico como identificadores internos, metadatos o vectores de embedding.\n6. Usa formato Markdown para que la respuesta sea clara:\n- Títulos: ###\n- Listas: •\n- Negrita: solo para destacar lo imprescindible\n7. Si te hacen una pregunta sin contexto suficiente, responde: “¿Podrías especificar a qué parte del reglamento te refieres?”"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        944,
+        0
+      ],
+      "id": "07990f4f-2275-4b83-a341-2853f7176ffb",
+      "name": "PREGUNTAS Y RESPUESTAS"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        256
+      ],
+      "id": "85062e51-9f5c-450c-934c-7798631f9286",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "LFnduX1SkoDgy4eT",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        256
+      ],
+      "id": "9799e438-cbe8-4a19-9d52-b3bb196d6381",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1232,
+        448
+      ],
+      "id": "0df5b046-7175-4849-b679-9e9f6436df2d",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "LFnduX1SkoDgy4eT",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1VUOWlQjN421QVpsYD5Jpufo24EpJ5dIr",
+            "mode": "list",
+            "cachedResultName": "Kings League",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1VUOWlQjN421QVpsYD5Jpufo24EpJ5dIr"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -480,
+        0
+      ],
+      "id": "2ce806ce-a0ff-4e66-a0e3-8f0aa59cb868",
+      "name": "Buscar documento ",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "QRMeUdnUxQyxqURX",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -208,
+        0
+      ],
+      "id": "c0f013ef-7d13-4958-be96-d918ed7b95ab",
+      "name": "Descargar documento",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "QRMeUdnUxQyxqURX",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag-kingsleague-pdf",
+          "mode": "list",
+          "cachedResultName": "rag-kingsleague-pdf"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        0
+      ],
+      "id": "8445074b-c0c2-4a45-8306-85060ba78309",
+      "name": "Base de datos vectroial",
+      "credentials": {
+        "pineconeApi": {
+          "id": "JKLbwSzOWvKmtHXU",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Usa esta herramienta para contestar preguntas sobre el Reglamento de la Kings y Queens league.",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag-kingsleague-pdf",
+          "mode": "list",
+          "cachedResultName": "rag-kingsleague-pdf"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1184,
+        256
+      ],
+      "id": "0c4c52c3-0938-49c8-9f0c-0a675f4c9711",
+      "name": "Buscador en la base vectorial",
+      "credentials": {
+        "pineconeApi": {
+          "id": "JKLbwSzOWvKmtHXU",
+          "name": "PineconeApi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Buscar documento ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Base de datos vectroial",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Base de datos vectroial",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "PREGUNTAS Y RESPUESTAS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "PREGUNTAS Y RESPUESTAS",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "PREGUNTAS Y RESPUESTAS",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Buscador en la base vectorial",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar documento ": {
+      "main": [
+        [
+          {
+            "node": "Descargar documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar documento": {
+      "main": [
+        [
+          {
+            "node": "Base de datos vectroial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscador en la base vectorial": {
+      "ai_tool": [
+        [
+          {
+            "node": "PREGUNTAS Y RESPUESTAS",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "76485da1-c06f-4f80-8209-b6ce8cffa5a1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d95a550170785f96dbb6b79c80e465b7c2d674abdfac4648d03ea4759e80f6ff"
+  },
+  "id": "KSlfwkgYDLAKRzru",
+  "tags": []
+}
